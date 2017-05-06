@@ -33,6 +33,7 @@ public class MotionScript : MonoBehaviour {
         float backward_movement = Input.GetAxis("Oculus_GearVR_LIndexTrigger");
         if(forward_movement != 0)
         {
+            Debug.Log(forward_movement);
             currentSpeed = currentSpeed + forward_movement * acceleration;
         }
         if(backward_movement != 0)
