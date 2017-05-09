@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class MotionScript : MonoBehaviour {
-    private CharacterController characterController;
+	private Rigidbody rb;
     private int acceleration = 5;
     private int maxSpeed = 75;
     private int maxReverse = 20;
@@ -14,27 +14,28 @@ public class MotionScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        characterController = GetComponent<CharacterController>();
+		rb = GetComponent<Rigidbody>();
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         Vector3 movementVector = updateMovement();
         // Should maybe store quaternion for use in steering wheel rotation
         if(currentSpeed != 0)
             transform.rotation *= updateRotation();
         currentSpeed = Mathf.Clamp(currentSpeed, -maxReverse, maxSpeed);
-        characterController.Move(movementVector * Time.deltaTime);
+        move(movementVector);
 	}
 
     Vector3 updateMovement()
     {
-        float forward_movement = Input.GetAxis("Oculus_GearVR_RIndexTrigger");
-        float backward_movement = Input.GetAxis("Oculus_GearVR_LIndexTrigger");
+		float forward_movement = Input.GetKey ("w") ? 1.0f : 0.0f;
+		float backward_movement = Input.GetKey ("s") ? 1.0f : 0.0f;
+        //float forward_movement = Input.GetAxis("Oculus_GearVR_RIndexTrigger");
+        //float backward_movement = Input.GetAxis("Oculus_GearVR_LIndexTrigger");
         if(forward_movement != 0)
         {
-            Debug.Log(forward_movement);
-            currentSpeed = currentSpeed + forward_movement * acceleration;
+			currentSpeed = currentSpeed + forward_movement * acceleration;
         }
         if(backward_movement != 0)
         {
@@ -56,16 +57,34 @@ public class MotionScript : MonoBehaviour {
                 currentSpeed = 0;
             }
         }
+		else if((forward_movement == 0 && backward_movement == 0) && currentSpeed < 0)
+		{
+			currentSpeed = currentSpeed - decelerationFactor * acceleration;
+			if(currentSpeed > 0)
+			{
+				currentSpeed = 0;
+			}
+		}
         Vector3 forward = new Vector3(1, 0, 0);
         return transform.TransformDirection(forward) * currentSpeed;
     }
 
     Quaternion updateRotation()
     {
-        Quaternion rot = Quaternion.identity;
-        float roll = 0;
-        roll = Input.GetAxis("Oculus_GearVR_LThumbstickX") * (Time.deltaTime * rotSpeed);
+		Quaternion rot = Quaternion.identity;
+		float roll = 0;
+		float roll_left = Input.GetKey ("a") ? -1.0f : 0.0f;
+		float roll_right = Input.GetKey ("d") ? 1.0f : 0.0f;
+		if (roll_right != 0)
+			roll = roll_right * (Time.deltaTime * rotSpeed);
+		else
+			roll = roll_left * (Time.deltaTime * rotSpeed);
+        //roll = Input.GetAxis("Oculus_GearVR_LThumbstickX") * (Time.deltaTime * rotSpeed);
         rot.eulerAngles = new Vector3(0, roll, 0);
         return rot;
     }
+
+	void move(Vector3 motionVector){
+		rb.MovePosition (transform.position + motionVector * Time.deltaTime);
+	}
 }
