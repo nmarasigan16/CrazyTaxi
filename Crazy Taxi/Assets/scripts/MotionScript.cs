@@ -13,7 +13,7 @@ public class MotionScript : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
 		rb = GetComponent<Rigidbody>();
     }
 	
