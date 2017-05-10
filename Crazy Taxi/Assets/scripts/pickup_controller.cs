@@ -8,6 +8,7 @@ public class pickup_controller : MonoBehaviour {
 	private GameObject pad;
 	private GameObject ind;
 	private GameObject destination;
+    private Object model;
     private waypoint_controller master;
     int rotspeed = 5;
     GameObject charac;
@@ -47,6 +48,7 @@ public class pickup_controller : MonoBehaviour {
 		pad.GetComponent<MeshRenderer> ().enabled = false;
         ind.GetComponent<MeshRenderer>().enabled = false;
         master.pickup_deactivated(timeout, destination);
+        Destroy(model);
     }
 
 	IEnumerator stay_active(){
@@ -63,7 +65,7 @@ public class pickup_controller : MonoBehaviour {
         StartCoroutine (stay_active ());
         Quaternion rot = Quaternion.identity;
         rot.eulerAngles = new Vector3(0, 0, 0);
-        Instantiate(charac, npc_pos.transform.position, rot);
+        model = Instantiate(charac, npc_pos.transform.position, rot);
     }
 
 	void OnTriggerEnter(Collider col){

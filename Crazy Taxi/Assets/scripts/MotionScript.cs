@@ -95,6 +95,11 @@ public class MotionScript : MonoBehaviour {
 	void move(Vector3 motionVector){
 		rb.MovePosition (transform.position + motionVector * Time.deltaTime);
 	}
-		
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
 
 }

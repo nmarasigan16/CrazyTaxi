@@ -11,8 +11,7 @@ public class resetScene : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKey (KeyCode.Return) || Input.GetKey ("enter")) {
-			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-		}
-	}
+        if(Input.GetAxis("Submit") == 1f)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }

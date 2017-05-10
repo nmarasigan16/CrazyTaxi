@@ -11,6 +11,8 @@ public class destination_controller : MonoBehaviour {
     private GameObject ind;
     int rotspeed = 5;
     private waypoint_controller master;
+    private GameObject charac;
+    private Object model;
 
     // Use this for initialization
     void Start () {
@@ -21,6 +23,7 @@ public class destination_controller : MonoBehaviour {
         is_active = false;
 		score_factor = .1f;
         toggleMeshRenderer(false);
+        charac = GameObject.Find("passenger");
     }
 	
 	// Update is called once per frame
@@ -30,16 +33,17 @@ public class destination_controller : MonoBehaviour {
 	}
 
 	void deactivate(bool completed){
-        Debug.Log(completed);
         if (completed) {
-            Debug.Log(Time.time - start_time);
 			int score = (int)(Mathf.Round((Time.time - start_time) * score_factor));
-
             //add score
             master.destination_deactivated(score);
             //spawn npc that walks
             toggleMeshRenderer(false);
-		} else {
+            Quaternion rot = Quaternion.identity;
+            rot.eulerAngles = new Vector3(0, 0, 0);
+            model = Instantiate(charac, npc_pos.transform.position, rot);
+            Destroy(model, 10f);
+        } else {
 			//call fail method in playerCar
 		}
 		is_active = false;
