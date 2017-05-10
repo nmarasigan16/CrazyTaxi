@@ -71,7 +71,7 @@ public class npc_controller : MonoBehaviour {
         }
         if (direction == "around")
         {
-            rot.eulerAngles = new Vector3(0, 0, 180);
+            rot.eulerAngles = new Vector3(0, 180, 0);
         }
         transform.rotation *= rot;
     }
