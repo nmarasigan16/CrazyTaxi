@@ -4,12 +4,12 @@ using System.Collections;
 public class MotionScript : MonoBehaviour {
 	private Rigidbody rb;
     private int acceleration = 5;
-    private int maxSpeed = 75;
+    public int maxSpeed = 75;
     private int maxReverse = 20;
     private int rotSpeed = 70;
     private float decelerationFactor = (float)(-.05);
     private float braking_factor = (float)(-.3);
-    private float currentSpeed = 0;
+    public float currentSpeed = 0;
 
 
     // Use this for initialization
