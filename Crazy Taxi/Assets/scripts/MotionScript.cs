@@ -10,16 +10,18 @@ public class MotionScript : MonoBehaviour {
     private float decelerationFactor = (float)(-.05);
     private float braking_factor = (float)(-.3);
     private float currentSpeed = 0;
+	private Vector3 movementVector;
 
 
     // Use this for initialization
     void Awake () {
 		rb = GetComponent<Rigidbody>();
+		movementVector = Vector3.zero;
     }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        Vector3 movementVector = updateMovement();
+        movementVector = updateMovement();
         // Should maybe store quaternion for use in steering wheel rotation
         if(currentSpeed != 0)
             transform.rotation *= updateRotation();
@@ -87,4 +89,6 @@ public class MotionScript : MonoBehaviour {
 	void move(Vector3 motionVector){
 		rb.MovePosition (transform.position + motionVector * Time.deltaTime);
 	}
+		
+
 }
