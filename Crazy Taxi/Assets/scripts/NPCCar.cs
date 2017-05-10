@@ -3,6 +3,7 @@ using System.Collections;
 
 public class NPCCar : MonoBehaviour {
 
+    public bool isLarge;
 	private Rigidbody car;
 	private bool x = true;
     private int turned_collisions;
@@ -43,38 +44,60 @@ public class NPCCar : MonoBehaviour {
 		car.MovePosition (transform.position + motionVector * Time.deltaTime * speed);
 	}
 
-	void OnTriggerEnter(Collider col)
-	{
+    void OnTriggerEnter(Collider col)
+    {
+        float delay = 0f;
+        if (isLarge)
+            delay = 1f;
         if (col.gameObject.tag == "border")
         {
-            turn("around");
+            StartCoroutine(wait_turn(0f, "left"));
+            StartCoroutine(wait_turn(.8f, "left"));
         }
-		else if (col.gameObject.tag == "intersection"){
+        else if (col.gameObject.tag == "intersection")
+        {
             if (turned_collisions != 0)
             {
                 turned_collisions -= 1;
             }
-            else {
+            else
+            {
                 collisions += 1;
-                if (collisions == 2) {
+                if (collisions == 2)
+                {
                     float should_turn = Random.value;
                     if (should_turn <= .5f)
                     {
-                        turn("right");
-                        turned_collisions = 1;
-                        collisions = 0;
+                        StartCoroutine(wait_turn(delay, "right"));
                     }
                 }
-                else if (collisions == 3) {
+                else if (collisions == 3)
+                {
                     float should_turn = Random.value;
                     if (should_turn <= .5f)
                     {
-                        turn("left");
-                        turned_collisions = 2;
+                        StartCoroutine(wait_turn(delay, "left"));
                     }
                     collisions = 0;
                 }
             }
-		}
-	}
+        }
+    }
+
+    IEnumerator wait_turn(float delay, string direction)
+    {
+        collisions = 0;
+        yield return new WaitForSeconds(delay);
+        collisions = 0;
+        if (direction == "right")
+        {
+            turned_collisions = 1;
+        }
+        else
+        {
+            turned_collisions = 2;
+        }
+        turn(direction);
+
+    }
 }

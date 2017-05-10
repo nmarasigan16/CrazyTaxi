@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class NPCCarY : MonoBehaviour {
-
+    private delegate void func(string ex);
+    private func f;
+    public bool isLarge;
     private Rigidbody car;
     private bool x = true;
     private int turned_collisions;
@@ -50,9 +52,13 @@ public class NPCCarY : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
+        float delay = 0f;
+        if (isLarge)
+            delay = 1f;
         if (col.gameObject.tag == "border")
         {
-            turn("around");
+            StartCoroutine(wait_turn(0f, "left"));
+            StartCoroutine(wait_turn(.8f + delay, "left"));
         }
         else if (col.gameObject.tag == "intersection")
         {
@@ -68,8 +74,8 @@ public class NPCCarY : MonoBehaviour {
                     float should_turn = Random.value;
                     if (should_turn <= .5f)
                     {
-                        turn("right");
-                        turned_collisions = 1;
+                        StartCoroutine(wait_turn(delay-.6f, "right"));
+                        turned_collisions = 1 + (int)delay;
                         collisions = 0;
                     }
                 }
@@ -78,12 +84,31 @@ public class NPCCarY : MonoBehaviour {
                     float should_turn = Random.value;
                     if (should_turn <= .5f)
                     {
-                        turn("left");
-                        turned_collisions = 2;
+                        StartCoroutine(wait_turn(delay-.6f, "left"));
+                        turned_collisions = 2 + (int)delay;
                     }
                     collisions = 0;
                 }
             }
         }
+    }
+
+    IEnumerator wait_turn(float delay, string direction)
+    {
+        yield return new WaitForSeconds(delay);
+        collisions = 0;
+        if (direction == "right")
+        {
+            turned_collisions = 1;
+            if (isLarge)
+                turned_collisions += 1;
+
+        }
+        else
+        {
+            turned_collisions = 2;
+        }
+        turn(direction);
+
     }
 }

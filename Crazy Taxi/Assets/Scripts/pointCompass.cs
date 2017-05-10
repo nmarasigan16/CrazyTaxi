@@ -28,7 +28,7 @@ public class pointCompass : MonoBehaviour {
 
 	}
 
-	void changeTarget(Vector3 newTarget){
+	public void changeTarget(Vector3 newTarget){
 		target = newTarget;
 	}
 }

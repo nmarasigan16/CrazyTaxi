@@ -4,12 +4,12 @@ using System.Collections;
 public class MotionScript : MonoBehaviour {
 	private Rigidbody rb;
     private int acceleration = 5;
-    private int maxSpeed = 75;
+    public int maxSpeed = 50;
     private int maxReverse = 20;
-    private int rotSpeed = 70;
+    private int rotSpeed = 60;
     private float decelerationFactor = (float)(-.05);
     private float braking_factor = (float)(-.3);
-    private float currentSpeed = 0;
+    public float currentSpeed = 0;
 	private Vector3 movementVector;
 
 
@@ -31,10 +31,14 @@ public class MotionScript : MonoBehaviour {
 
     Vector3 updateMovement()
     {
+
 		float forward_movement = Input.GetKey ("w") ? 1.0f : 0.0f;
 		float backward_movement = Input.GetKey ("s") ? 1.0f : 0.0f;
-        //float forward_movement = Input.GetAxis("Oculus_GearVR_RIndexTrigger");
-        //float backward_movement = Input.GetAxis("Oculus_GearVR_LIndexTrigger");
+
+        /*
+        float forward_movement = Input.GetAxis("Oculus_GearVR_RIndexTrigger");
+        float backward_movement = Input.GetAxis("Oculus_GearVR_LIndexTrigger");
+        */
         if(forward_movement != 0)
         {
 			currentSpeed = currentSpeed + forward_movement * acceleration;
@@ -75,12 +79,14 @@ public class MotionScript : MonoBehaviour {
     {
 		Quaternion rot = Quaternion.identity;
 		float roll = 0;
+
 		float roll_left = Input.GetKey ("a") ? -1.0f : 0.0f;
 		float roll_right = Input.GetKey ("d") ? 1.0f : 0.0f;
 		if (roll_right != 0)
 			roll = roll_right * (Time.deltaTime * rotSpeed);
 		else
 			roll = roll_left * (Time.deltaTime * rotSpeed);
+
         //roll = Input.GetAxis("Oculus_GearVR_LThumbstickX") * (Time.deltaTime * rotSpeed);
         rot.eulerAngles = new Vector3(0, roll, 0);
         return rot;
